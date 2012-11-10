@@ -1,12 +1,19 @@
-var fs = require('fs'),
-http = require('http');
-http.createServer(function (req, res) {
-	var html = '';
+var http = require("http");
+var url = require("url");
+var fs = require('fs');
 
-	html = fs.readFileSync(__dirname + "/views/header.html");
-	html = html + fs.readFileSync(__dirname + "/views/index.html");
-	html = html + fs.readFileSync(__dirname + "/views/footer.html");
-  res.writeHead(200);
-  res.end(html);
-}).listen(1337, '127.0.0.1');
-console.log('Server running at http://127.0.0.1:1337/');
+function start() {
+  function onRequest(request, response) {
+    var pathname = url.parse(request.url).pathname;
+    console.log("Request for " + pathname + " received.");
+    response.writeHead(200, {"Content-Type": "text/html"});
+    var html = fs.readFileSync(__dirname + "/views/index.html");
+    response.write(html);
+    response.end();
+  }
+
+  http.createServer(onRequest).listen(1337, '127.0.0.1');
+  console.log("Server has started.");
+}
+
+start();

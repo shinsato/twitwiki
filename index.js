@@ -1,6 +1,15 @@
-var http = require('http');
+var fs = require('fs'),
+http = require('http');
 http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hi Zach\n');
+  fs.readFile(__dirname + "/index.html", function (err,data) {
+    if (err) {
+      res.writeHead(404);
+      res.end(JSON.stringify(err));
+      return;
+    }
+    res.writeHead(200);
+    res.end(data);
+  });
+
 }).listen(1337, '127.0.0.1');
 console.log('Server running at http://127.0.0.1:1337/');
